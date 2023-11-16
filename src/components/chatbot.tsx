@@ -2,6 +2,7 @@
 import dynamic from "next/dynamic";
 import { useRef, useState } from "react";
 import ClosingBar from "./closing-bar";
+import FloatingButton from "./floating-button";
 
 export default function Chatbot() {
   const LANGCHAIN_SERVER_URL = 'http://localhost:8000/langchains'
@@ -44,66 +45,70 @@ export default function Chatbot() {
   }
 
   return (
-    <div ref={ref} style={{position: 'fixed', bottom: '2vh', right: '5vw', zIndex: 1}}>
-      <ClosingBar parent={ref} />
-      <DeepChat
-        request={{
-          handler: async (body, signals) => {
-            // if (!conversationId) {
-            //   await initiateSession(signals);
-            // }
+    <>
+      <FloatingButton style={{position: 'fixed', bottom: '5vh', right: '10vw', zIndex: 1}} />
+      <div ref={ref} style={{position: 'fixed', bottom: '2vh', right: '5vw', zIndex: 1}}>
+        <ClosingBar parent={ref} />
+        <DeepChat
+          request={{
+            handler: async (body, signals) => {
+              // if (!conversationId) {
+              //   await initiateSession(signals);
+              // }
 
-            let question: string;
-            let files: Array<File> | null = null;
-            if (body instanceof FormData) {
-              [question, files] = processFormData(body);
-            } else {
-              const last = body?.messages.length - 1;
-              question = body?.messages[last]?.text ?? '';
-            }
-
-            // Define custom headers
-            const headers = new Headers();
-            if (!!conversationId) {
-              headers.set('X-Conversation-Id', conversationId);
-            }
-
-            // Define custom body
-            const formData = new FormData();
-            formData.append('question', question);
-
-            if (files != null) {
-              for (const file of files) {
-                formData.append('files', file);
+              let question: string;
+              let files: Array<File> | null = null;
+              if (body instanceof FormData) {
+                [question, files] = processFormData(body);
+              } else {
+                const last = body?.messages.length - 1;
+                question = body?.messages[last]?.text ?? '';
               }
-            }
 
-            // signals.onResponse({'text': 'Response'});
-            fetch(`${LANGCHAIN_SERVER_URL}/conversate`, {
-              method: 'POST',
-              headers: headers,
-              body: formData,
-            })
-              .then(res => {
-                const cid = res.headers.get('X-Conversation-Id');
-                if (cid) {
-                  setConversationId(cid);
+              // Define custom headers
+              const headers = new Headers();
+              if (!!conversationId) {
+                headers.set('X-Conversation-Id', conversationId);
+              }
+
+              // Define custom body
+              const formData = new FormData();
+              formData.append('question', question);
+
+              if (files != null) {
+                for (const file of files) {
+                  formData.append('files', file);
                 }
-                return res.json();
-              })
-              .then(output => {
-                signals.onResponse({ text: output['text'] });
-              });
+              }
 
-          }
-        }}
-        style={{ borderRadius: "10px", borderTopLeftRadius: 0, borderTopRightRadius: 0, borderTop: 'none' }}
-        textInput={{ placeholder: { text: "Talk to our AI assistant" } }}
-        initialMessages={initialMessages}
-        mixedFiles={true}
-        introMessage={{ text: 'Hi, I am your assistant, ask me anything!' }}
-        stream={{ simulation: true }}
-      />
-    </div>
+              // signals.onResponse({'text': 'Response'});
+              fetch(`${LANGCHAIN_SERVER_URL}/conversate`, {
+                method: 'POST',
+                headers: headers,
+                body: formData,
+              })
+                .then(res => {
+                  const cid = res.headers.get('X-Conversation-Id');
+                  if (cid) {
+                    setConversationId(cid);
+                  }
+                  return res.json();
+                })
+                .then(output => {
+                  signals.onResponse({ text: output['text'] });
+                });
+
+            }
+          }}
+          style={{ borderRadius: "10px", borderTopLeftRadius: 0, borderTopRightRadius: 0, borderTop: 'none' }}
+          textInput={{ placeholder: { text: "Talk to our AI assistant" } }}
+          initialMessages={initialMessages}
+          mixedFiles={true}
+          introMessage={{ text: 'Hi, I am your assistant, ask me anything!' }}
+          stream={{ simulation: true }}
+        />
+      </div>
+    </>
+    
   )
 }
