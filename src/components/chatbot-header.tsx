@@ -2,17 +2,10 @@ import { RefObject, useState } from 'react'
 import '../app/globals.css'
 
 type Props = {
-  parent: RefObject<HTMLDivElement>
+  toggleCloseButton: () => void,
 }
 
-export default function ClosingBar({ parent }: Props) {
-  const [closed, setClosed] = useState<boolean>(false);
-
-  const toggleCloseButton = () => {
-    const next = !closed;
-    parent.current!.style.display = next ? 'none' : 'block';
-    setClosed(next);
-  }
+export default function ChatbotHeader({ toggleCloseButton }: Props) {
 
   return (
     <div className='flex justify-end bg-white' style={{border: '1px solid rgb(202,202,202)', borderTopLeftRadius: '10px', borderTopRightRadius: '10px'}}>
@@ -23,7 +16,7 @@ export default function ClosingBar({ parent }: Props) {
       >
         <span className="sr-only">Close menu</span>
         <svg className="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
         </svg>
       </button>
     </div>
