@@ -3,14 +3,16 @@ import dynamic from "next/dynamic";
 import { useRef, useState } from "react";
 import ChatbotHeader from "./chatbot-header";
 import FloatingButton from "./floating-button";
+import { GetServerSideProps } from "next";
 
-export default function Chatbot() {
-  const LANGCHAIN_SERVER_URL = 'http://localhost:8000/langchains'
+const LANGCHAIN_SERVER_URL = 'http://localhost:8000/langchains'
+type Props = {
+  initialMessages: Array<object>,
+}
+export default function Chatbot({ initialMessages }: Props) {
   const [conversationId, setConversationId] = useState<string>('');
   const ref = useRef<HTMLDivElement>(null);
   const [closed, setClosed] = useState(true);
-  const initialMessages: any[] = [
-  ];
 
   const toggleCloseButton = () => {
     setClosed(!closed);
@@ -51,11 +53,9 @@ export default function Chatbot() {
 
   return (
     <>
+      <FloatingButton toggleCloseButton={toggleCloseButton} style={{position: 'fixed', bottom: '5vh', right: '10vw', zIndex: 1}} />
       {
-        closed ? 
-        <FloatingButton toggleCloseButton={toggleCloseButton} style={{position: 'fixed', bottom: '5vh', right: '10vw', zIndex: 1}} />
-        :
-        <div key='chatbot-dialog' ref={ref} style={{position: 'fixed', bottom: '2vh', right: '5vw', zIndex: 1}}>
+        !closed && <div key='chatbot-dialog' ref={ref} style={{position: 'fixed', bottom: '2vh', right: '5vw', zIndex: 1}}>
           <ChatbotHeader toggleCloseButton={toggleCloseButton} />
           <DeepChat
             request={{
@@ -116,8 +116,7 @@ export default function Chatbot() {
             stream={{ simulation: true }}
           />
         </div>
-      }
-      
+      }  
     </>
     
   )
