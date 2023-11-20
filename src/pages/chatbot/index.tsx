@@ -11,12 +11,18 @@ type FileInfo = {
   mime_type: string
 }
 
+type RespondedFile = {
+  content: string
+  content_type: string
+}
+
 type ConversationHistory = {
-  id: number,
-  human_message: string,
-  ai_message: string,
-  conversation_id: string,
-  file_detail: FileInfo[],
+  id: number
+  human_message: string
+  ai_message: string
+  conversation_id: string
+  uploaded_file_detail: FileInfo[]
+  responded_media: RespondedFile[]
 }
 
 export async function getServerSideProps(context: any) {
@@ -33,6 +39,7 @@ export async function getServerSideProps(context: any) {
   if (res.status !== 200) {
     return {props: {
       initialMessages: [],
+      conversationId: uuid,
     }}
   }
 
@@ -40,26 +47,35 @@ export async function getServerSideProps(context: any) {
   const processed = []
   for (let msg of messages) {
     const files = []
-    if ('file_detail' in msg && (msg['file_detail'] ?? []).length >= 1) {
-      for (let detail of msg['file_detail']) {
+    if ('uploaded_file_detail' in msg && (msg['uploaded_file_detail'] ?? []).length >= 1) {
+      for (let detail of msg['uploaded_file_detail']) {
         files.push({type: 'file', name: detail['filename']});
       }
     }
+
+    const responded_media_list = [];
+    if ('responded_media' in msg && (msg['responded_media'] ?? []).length >= 1) {
+      for (const media of msg['responded_media']) {
+        responded_media_list.push({src: `data:${media.content_type};base64,${media.content}`, type: 'image'})
+      }
+    }
     processed.push({files: files, role: 'user', text: msg.human_message});
-    processed.push({role: 'ai', text: msg.ai_message});
+    processed.push({files: responded_media_list, role: 'ai', text: msg.ai_message});
   }
 
   return {props: {
     messages: processed,
+    conversationId: uuid,
   }}
 }
 
 type Props = {
   messages: Array<object>,
+  conversationId: string,
 }
 
-export default function Home({messages}: Props) {
+export default function Home({messages, conversationId}: Props) {
   return (
-    <Chatbot initialMessages={messages}/>
+    <Chatbot initialMessages={messages} cid={conversationId} />
   )
 }

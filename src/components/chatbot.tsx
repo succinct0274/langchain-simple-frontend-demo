@@ -8,9 +8,16 @@ import { GetServerSideProps } from "next";
 const LANGCHAIN_SERVER_URL = 'http://localhost:8000/langchains'
 type Props = {
   initialMessages: Array<object>,
+  cid: string,
 }
-export default function Chatbot({ initialMessages }: Props) {
-  const [conversationId, setConversationId] = useState<string>('');
+
+type ChatResponse = {
+  text: string
+  image: string
+};
+
+export default function Chatbot({ initialMessages, cid }: Props) {
+  const [conversationId, setConversationId] = useState<string>(cid);
   const ref = useRef<HTMLDivElement>(null);
   const [closed, setClosed] = useState(true);
 
@@ -60,9 +67,6 @@ export default function Chatbot({ initialMessages }: Props) {
           <DeepChat
             request={{
               handler: async (body, signals: any) => {
-                // if (!conversationId) {
-                //   await initiateSession(signals);
-                // }
 
                 let question: string;
                 let files: Array<File> | null = null;
@@ -74,9 +78,11 @@ export default function Chatbot({ initialMessages }: Props) {
                 }
 
                 // Define custom headers
-                const headers = new Headers();
+                // const headers = new Headers();
+                const headers: any = {};
                 if (!!conversationId) {
-                  headers.set('X-Conversation-Id', conversationId);
+                  // headers.set('X-Conversation-Id', conversationId);
+                  headers['X-Conversation-Id'] = conversationId
                 }
 
                 // Define custom body
@@ -93,6 +99,7 @@ export default function Chatbot({ initialMessages }: Props) {
                 fetch(`${LANGCHAIN_SERVER_URL}/conversate`, {
                   method: 'POST',
                   headers: headers,
+                  // mode: 'no-cors',
                   body: formData,
                 })
                   .then(res => {
@@ -100,10 +107,22 @@ export default function Chatbot({ initialMessages }: Props) {
                     if (cid) {
                       setConversationId(cid);
                     }
-                    return res.json();
+                    return res.json()
                   })
                   .then(output => {
-                    signals.onResponse({ text: output['text'] });
+                    const files = [];
+                    if ('image' in output) {
+                      for (const image of output['image']) {
+                        files.push({src: `data:${image.content_type};base64,${image.content}`, type: 'image'});
+                      }
+                    }
+
+                    console.log(files)
+
+                    signals.onResponse({ 
+                      text: output['text'],
+                      files: files
+                    });
                   });
 
               }
@@ -113,7 +132,7 @@ export default function Chatbot({ initialMessages }: Props) {
             initialMessages={initialMessages}
             mixedFiles={true}
             introMessage={{ text: 'Hi, I am your assistant, ask me anything!' }}
-            stream={{ simulation: true }}
+            // stream={true}
           />
         </div>
       }  
