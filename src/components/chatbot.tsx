@@ -132,7 +132,7 @@ export default function Chatbot({ initialMessages, cid }: Props) {
             initialMessages={initialMessages}
             mixedFiles={true}
             introMessage={{ text: 'Hi, I am your assistant, ask me anything!' }}
-            // stream={true}
+            // stream={{simulation: true}}
           />
         </div>
       }  
