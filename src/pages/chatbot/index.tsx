@@ -28,7 +28,10 @@ export type ConversationHistory = {
 
 export async function getServerSideProps(context: any) {
   const {uuid} = context.query;
-  if (!uuid) return {props: {}};
+  if (!uuid) return {props: {
+    messages: [],
+    conversationId: null
+  }};
 
   const res = await fetchConversationHistory(uuid);
   return {props: {
