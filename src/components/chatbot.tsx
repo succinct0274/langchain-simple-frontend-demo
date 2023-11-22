@@ -1,11 +1,10 @@
-
+'use client'
 import dynamic from "next/dynamic";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import ChatbotHeader from "./chatbot-header";
 import FloatingButton from "./floating-button";
-import { GetServerSideProps } from "next";
 
-const LANGCHAIN_SERVER_URL = 'http://127.0.0.1:8000/langchains'
+export const LANGCHAIN_SERVER_URL = 'http://127.0.0.1:8000/langchains'
 type Props = {
   initialMessages: Array<object>,
   cid: string,
@@ -18,6 +17,7 @@ type ChatResponse = {
 
 export default function Chatbot({ initialMessages, cid }: Props) {
   const [conversationId, setConversationId] = useState<string>(cid);
+  const [messages, setMessages] = useState<object[]>(initialMessages);
   const ref = useRef<HTMLDivElement>(null);
   const [closed, setClosed] = useState(true);
 
@@ -121,8 +121,6 @@ export default function Chatbot({ initialMessages, cid }: Props) {
                       }
                     }
 
-                    console.log(files)
-
                     signals.onResponse({ 
                       text: output['text'],
                       files: files
@@ -133,7 +131,7 @@ export default function Chatbot({ initialMessages, cid }: Props) {
             }}
             style={{ borderRadius: "10px", borderTopLeftRadius: 0, borderTopRightRadius: 0, borderTop: 'none' }}
             textInput={{ placeholder: { text: "Talk to our AI assistant" } }}
-            initialMessages={initialMessages}
+            initialMessages={messages}
             mixedFiles={true}
             introMessage={{ text: 'Hi, I am your assistant, ask me anything!' }}
             // stream={{simulation: true}}
