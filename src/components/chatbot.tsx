@@ -80,9 +80,8 @@ export default function Chatbot({ initialMessages, cid }: Props) {
                 // Define custom headers
                 // const headers = new Headers();
                 const headers: any = {};
-                if (!!conversationId) {
-                  // headers.set('X-Conversation-Id', conversationId);
-                  headers['X-Conversation-Id'] = conversationId
+                if (sessionStorage.getItem('conversationId')) {
+                  headers['X-Conversation-Id'] = sessionStorage.getItem('conversationId')
                   console.log('Included custom header')
                 }
 
@@ -104,12 +103,9 @@ export default function Chatbot({ initialMessages, cid }: Props) {
                   body: formData,
                 })
                   .then(res => {
-                    res.headers.forEach((v, k) => {
-                      console.log(`key: ${k} - value: ${v}`)
-                    })
                     const cid = res.headers.get('x-conversation-id');
                     if (cid) {
-                      setConversationId(cid);
+                      sessionStorage.setItem('conversationId', conversationId)
                     }
                     return res.json()
                   })
