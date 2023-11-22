@@ -80,7 +80,7 @@ export default function Chatbot({ initialMessages, cid }: Props) {
                 // Define custom headers
                 // const headers = new Headers();
                 const headers: any = {};
-                if (sessionStorage.getItem('conversationId')) {
+                if (!!sessionStorage.getItem('conversationId')) {
                   headers['X-Conversation-Id'] = sessionStorage.getItem('conversationId')
                   console.log('Included custom header')
                 }
@@ -105,7 +105,7 @@ export default function Chatbot({ initialMessages, cid }: Props) {
                   .then(res => {
                     const cid = res.headers.get('x-conversation-id');
                     if (cid) {
-                      sessionStorage.setItem('conversationId', conversationId)
+                      sessionStorage.setItem('conversationId', cid)
                     }
                     return res.json()
                   })
