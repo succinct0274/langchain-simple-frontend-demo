@@ -5,7 +5,7 @@ import ChatbotHeader from "./chatbot-header";
 import FloatingButton from "./floating-button";
 import { GetServerSideProps } from "next";
 
-const LANGCHAIN_SERVER_URL = 'http://localhost:8000/langchains'
+const LANGCHAIN_SERVER_URL = 'http://127.0.0.1:8000/langchains'
 type Props = {
   initialMessages: Array<object>,
   cid: string,
@@ -83,6 +83,7 @@ export default function Chatbot({ initialMessages, cid }: Props) {
                 if (!!conversationId) {
                   // headers.set('X-Conversation-Id', conversationId);
                   headers['X-Conversation-Id'] = conversationId
+                  console.log('Included custom header')
                 }
 
                 // Define custom body
@@ -103,7 +104,10 @@ export default function Chatbot({ initialMessages, cid }: Props) {
                   body: formData,
                 })
                   .then(res => {
-                    const cid = res.headers.get('X-Conversation-Id');
+                    res.headers.forEach((v, k) => {
+                      console.log(`key: ${k} - value: ${v}`)
+                    })
+                    const cid = res.headers.get('x-conversation-id');
                     if (cid) {
                       setConversationId(cid);
                     }
