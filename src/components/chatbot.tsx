@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import ChatbotHeader from "./chatbot-header";
 import FloatingButton from "./floating-button";
 
-export const LANGCHAIN_SERVER_URL = 'http://127.0.0.1:8000/langchains'
+export const LANGCHAIN_SERVER_URL = process.env.LANGCHAIN_SERVER_URL
 type Props = {
   initialMessages: Array<object>,
   cid: string,

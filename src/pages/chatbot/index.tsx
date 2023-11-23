@@ -5,7 +5,7 @@ import { GetServerSideProps } from "next";
 import dynamic from "next/dynamic";
 import { useState } from "react";
 
-const LANGCHAIN_SERVER_URL = 'http://127.0.0.1:8000/langchains'
+const LANGCHAIN_SERVER_URL = process.env.LANGCHAIN_SERVER_URL
 
 type FileInfo = {
   filename: string
