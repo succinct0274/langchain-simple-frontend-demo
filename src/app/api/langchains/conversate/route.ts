@@ -31,5 +31,5 @@ export async function POST(
 
     const json = await result.json();
     console.log(json);
-    return NextResponse.json(json);
+    return NextResponse.json({...json});
 }
