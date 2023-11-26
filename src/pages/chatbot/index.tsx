@@ -5,8 +5,6 @@ import { GetServerSideProps } from "next";
 import dynamic from "next/dynamic";
 import { useState } from "react";
 
-const LANGCHAIN_SERVER_URL = process.env.LANGCHAIN_SERVER_URL
-
 type FileInfo = {
   filename: string
   mime_type: string

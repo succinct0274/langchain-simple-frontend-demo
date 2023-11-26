@@ -1,4 +1,4 @@
-import { LANGCHAIN_SERVER_URL } from "@/components/chatbot";
+import { NEXT_PUBLIC_LANGCHAIN_SERVER_URL } from "@/components/chatbot";
 import { ConversationHistory } from "@/pages/chatbot";
 
 
@@ -6,7 +6,7 @@ export const fetchConversationHistory = async (uuid: string) => {
   const headers = new Headers();
   headers.append('X-Conversation-Id', uuid);
 
-  const res = await fetch(`${LANGCHAIN_SERVER_URL}/conversate`, {
+  const res = await fetch(`${NEXT_PUBLIC_LANGCHAIN_SERVER_URL}/conversate`, {
     method: 'GET',
     headers: headers
   });
