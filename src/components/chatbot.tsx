@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import ChatbotHeader from "./chatbot-header";
 import FloatingButton from "./floating-button";
 
-export const LANGCHAIN_SERVER_URL = process.env.LANGCHAIN_SERVER_URL
+export const NEXT_PUBLIC_LANGCHAIN_SERVER_URL = process.env.NEXT_PUBLIC_LANGCHAIN_SERVER_URL
 type Props = {
   initialMessages: Array<object>,
   cid: string,
@@ -33,7 +33,7 @@ export default function Chatbot({ initialMessages, cid }: Props) {
   )
 
   const initiateSession = async (signals: any) => {
-    await fetch(`${LANGCHAIN_SERVER_URL}/session/init`, { method: 'POST' }).then(async res => {
+    await fetch(`${NEXT_PUBLIC_LANGCHAIN_SERVER_URL}/langchains/session/init`, { method: 'POST' }).then(async res => {
       const data = await res.json()
       setConversationId(data['conversation_id']);
     }).catch(err => {
@@ -96,7 +96,7 @@ export default function Chatbot({ initialMessages, cid }: Props) {
                 }
 
                 // signals.onResponse({'text': 'Response'});
-                fetch(`${LANGCHAIN_SERVER_URL}/conversate`, {
+                fetch(`${NEXT_PUBLIC_LANGCHAIN_SERVER_URL}/conversate`, {
                   method: 'POST',
                   headers: headers,
                   // mode: 'no-cors',
