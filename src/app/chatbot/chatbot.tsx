@@ -3,7 +3,8 @@ import dynamic from "next/dynamic";
 import { useEffect, useRef, useState } from "react";
 import ChatbotHeader from "./chatbot-header";
 import FloatingButton from "./floating-button";
-import { ConversationHistory } from "@/pages/chatbot";
+import { ConversationHistory } from "@/app/chatbot/page";
+import { DeepChat } from "deep-chat-react";
 
 export const LANGCHAIN_SERVER_URL = process.env.NEXT_PUBLIC_LANGCHAIN_SERVER_URL
 type Props = {
@@ -26,12 +27,12 @@ export default function Chatbot({ initialMessages, cid }: Props) {
     setClosed(!closed);
   }
 
-  const DeepChat = dynamic(
-    () => import("deep-chat-react").then((mod) => mod.DeepChat),
-    {
-      ssr: false,
-    },
-  )
+  // const DeepChat = dynamic(
+  //   () => import("deep-chat-react").then((mod) => mod.DeepChat),
+  //   {
+  //     ssr: false,
+  //   },
+  // )
 
   const processFormData: (body: FormData) => readonly [string, Array<File>] = (body: FormData) => {
     // Assume body is using form data as mixedFiles enabled
@@ -113,7 +114,6 @@ export default function Chatbot({ initialMessages, cid }: Props) {
                       files: files
                     });
                   });
-
               }
             }}
             style={{ borderRadius: "10px", borderTopLeftRadius: 0, borderTopRightRadius: 0, borderTop: 'none' }}

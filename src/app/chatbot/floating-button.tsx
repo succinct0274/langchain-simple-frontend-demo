@@ -1,3 +1,4 @@
+'use client'
 import { CSSProperties, Dispatch, RefObject, SetStateAction } from "react"
 
 type Props = {

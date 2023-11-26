@@ -1,5 +1,6 @@
+'use clent'
 import { RefObject, useState } from 'react'
-import '../app/globals.css'
+import '../globals.css'
 
 type Props = {
   toggleCloseButton: () => void,

@@ -1,5 +1,5 @@
 
-import Chatbot from "@/components/chatbot";
+import Chatbot from "@/app/chatbot/chatbot";
 import { fetchConversationHistory } from "@/util/fetchConversationHistory";
 
 type FileInfo = {
@@ -22,25 +22,14 @@ export type ConversationHistory = {
   responded_media: RespondedFile[]
 }
 
-export async function getServerSideProps(context: any) {
-  const {uuid} = context.query;
-  if (!uuid) return {props: {
-    messages: [],
-    conversationId: null
-  }};
-
-  const res = await fetchConversationHistory(uuid);
-  return {props: {
-    ...res
-  }}
-}
-
 type Props = {
-  messages: Array<ConversationHistory[]>,
-  conversationId: string,
+  searchParams: {uuid: string}
 }
 
-export default function Home({messages, conversationId}: Props) {
+export default async function Home({ searchParams }: Props) {
+  const { uuid } = searchParams;
+  const { messages, conversationId } = await fetchConversationHistory(uuid);
+
   return (
     <Chatbot initialMessages={messages} cid={conversationId} />
   )

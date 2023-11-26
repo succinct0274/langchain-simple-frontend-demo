@@ -1,6 +1,6 @@
-import { LANGCHAIN_SERVER_URL } from "@/components/chatbot";
-import { ConversationHistory } from "@/pages/chatbot";
+import { ConversationHistory } from "@/app/chatbot/page";
 
+const LANGCHAIN_SERVER_URL = process.env.LANGCHAIN_SERVER_URL
 
 export const fetchConversationHistory = async (uuid: string) => {
   const headers = new Headers();
@@ -14,10 +14,8 @@ export const fetchConversationHistory = async (uuid: string) => {
 
   if (res.status !== 200) {
     return {
-      props: {
-        initialMessages: [],
-        conversationId: uuid,
-      }
+      messages: [],
+      conversationId: uuid,
     }
   }
 
