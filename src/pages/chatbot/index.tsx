@@ -1,9 +1,6 @@
 
 import Chatbot from "@/components/chatbot";
 import { fetchConversationHistory } from "@/util/fetchConversationHistory";
-import { GetServerSideProps } from "next";
-import dynamic from "next/dynamic";
-import { useState } from "react";
 
 type FileInfo = {
   filename: string
@@ -17,6 +14,7 @@ type RespondedFile = {
 
 export type ConversationHistory = {
   id: number
+  role: string
   human_message: string
   ai_message: string
   conversation_id: string
@@ -38,7 +36,7 @@ export async function getServerSideProps(context: any) {
 }
 
 type Props = {
-  messages: Array<object>,
+  messages: Array<ConversationHistory[]>,
   conversationId: string,
 }
 

@@ -3,10 +3,11 @@ import dynamic from "next/dynamic";
 import { useEffect, useRef, useState } from "react";
 import ChatbotHeader from "./chatbot-header";
 import FloatingButton from "./floating-button";
+import { ConversationHistory } from "@/pages/chatbot";
 
-export const NEXT_PUBLIC_LANGCHAIN_SERVER_URL = process.env.NEXT_PUBLIC_LANGCHAIN_SERVER_URL
+export const LANGCHAIN_SERVER_URL = process.env.NEXT_PUBLIC_LANGCHAIN_SERVER_URL
 type Props = {
-  initialMessages: Array<object>,
+  initialMessages: Array<any>,
   cid: string,
 }
 
@@ -17,7 +18,7 @@ type ChatResponse = {
 
 export default function Chatbot({ initialMessages, cid }: Props) {
   const [conversationId, setConversationId] = useState<string>(cid);
-  const [messages, setMessages] = useState<object[]>(initialMessages);
+  const [messages, setMessages] = useState<ConversationHistory[]>(initialMessages);
   const ref = useRef<HTMLDivElement>(null);
   const [closed, setClosed] = useState(true);
 
@@ -31,15 +32,6 @@ export default function Chatbot({ initialMessages, cid }: Props) {
       ssr: false,
     },
   )
-
-  const initiateSession = async (signals: any) => {
-    await fetch(`${NEXT_PUBLIC_LANGCHAIN_SERVER_URL}/langchains/session/init`, { method: 'POST' }).then(async res => {
-      const data = await res.json()
-      setConversationId(data['conversation_id']);
-    }).catch(err => {
-      signals.onResponse({ error: 'Error' });
-    })
-  }
 
   const processFormData: (body: FormData) => readonly [string, Array<File>] = (body: FormData) => {
     // Assume body is using form data as mixedFiles enabled
@@ -95,11 +87,10 @@ export default function Chatbot({ initialMessages, cid }: Props) {
                   }
                 }
 
-                // signals.onResponse({'text': 'Response'});
-                fetch(`${NEXT_PUBLIC_LANGCHAIN_SERVER_URL}/conversate`, {
+                console.log(`LANGCHAIN_SERVER_URL: ${LANGCHAIN_SERVER_URL}`)
+                fetch(`/api/langchains/conversate`, {
                   method: 'POST',
                   headers: headers,
-                  // mode: 'no-cors',
                   body: formData,
                 })
                   .then(res => {

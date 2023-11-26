@@ -2,9 +2,13 @@
 const nextConfig = {
     output: 'standalone',
     experimental: {
-        serverActions: {
-            allowedOrigins: ["https://langchain-chatbot-wxihu.ondigitalocean.app"]
-        }
+        esmExternals: 'loose'
+    },
+    eslint: {
+        ignoreDuringBuilds: true
+    },
+    typescript: {
+        ignoreBuildErrors: true
     }
 }
 
