@@ -30,6 +30,8 @@ export default async function Home({ searchParams }: Props) {
   const { uuid } = searchParams;
   const { messages, conversationId } = await fetchConversationHistory(uuid);
 
+  console.log(conversationId)
+
   return (
     <Chatbot initialMessages={messages} cid={conversationId} />
   )

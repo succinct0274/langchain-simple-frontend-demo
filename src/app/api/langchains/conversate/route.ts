@@ -12,11 +12,11 @@ export async function POST(
   req: NextRequest,
 //   res: NextApiResponse
 ) {
-    const conversation_id = req.headers.get('x-conversation-id') ?? null;
+    const conversationId = req.headers.get('x-conversation-id') ?? null;
     // const headers: any = {'Content-Type': 'multipart/form-data'};
     const headers: any = {}
-    if (!!conversation_id) {
-        headers['X-Conversation-Id'] = conversation_id;
+    if (!!conversationId) {
+        headers['X-Conversation-Id'] = conversationId;
     }
 
     const result = await fetch(`${LANGCHAIN_SERVER_URL}/langchains/conversate`, {
@@ -24,12 +24,11 @@ export async function POST(
         headers: headers,
         body: await req.formData(),
     })
-
-    if (result.headers.get('x-conversation-id')) {
-        headers['X-Conversation-Id'] = result.headers.get('x-conversation-id') as string
-    }
-
+    
     const json = await result.json();
     console.log(json);
-    return NextResponse.json({...json});
+    const res = NextResponse.json({...json});
+    res.headers.set('X-Conversation-Id', result.headers.get('x-conversation-id') as string);
+
+    return res
 }
