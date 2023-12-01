@@ -19,16 +19,10 @@ export async function POST(
         headers['X-Conversation-Id'] = conversationId;
     }
 
-    const result = await fetch(`${LANGCHAIN_SERVER_URL}/langchains/conversate`, {
+    return fetch(`${LANGCHAIN_SERVER_URL}/langchains/conversate`, {
         method: 'POST',
         headers: headers,
         body: await req.formData(),
-    })
+    });
     
-    const json = await result.json();
-    console.log(json);
-    const res = NextResponse.json({...json});
-    res.headers.set('X-Conversation-Id', result.headers.get('x-conversation-id') as string);
-
-    return res
 }

@@ -1,6 +1,6 @@
 
 import Chatbot from "@/app/chatbot/chatbot";
-import { fetchConversationHistory } from "@/util/fetchConversationHistory";
+import { fetchConversationHistory } from "@/lib/fetchConversationHistory";
 
 type FileInfo = {
   filename: string

@@ -23,6 +23,12 @@ export default function Chatbot({ initialMessages, cid }: Props) {
   const ref = useRef<HTMLDivElement>(null);
   const [closed, setClosed] = useState(true);
 
+  useEffect(() => {
+    if (!!conversationId) {
+      sessionStorage.setItem('conversationId', conversationId);
+    }
+  }, []);
+
   const toggleCloseButton = () => {
     setClosed(!closed);
   }
@@ -93,27 +99,35 @@ export default function Chatbot({ initialMessages, cid }: Props) {
                   method: 'POST',
                   headers: headers,
                   body: formData,
-                })
-                  .then(res => {
-                    const cid = res.headers.get('x-conversation-id');
-                    if (cid) {
-                      sessionStorage.setItem('conversationId', cid)
-                    }
-                    return res.json()
-                  })
-                  .then(output => {
-                    const files = [];
-                    if ('image' in output) {
-                      for (const image of output['image']) {
-                        files.push({src: `data:${image.content_type};base64,${image.content}`, type: 'image'});
-                      }
-                    }
+                }).then(res => {
+                  if (res.status !== 200) {
+                    return Promise.reject(res);
+                  }
 
-                    signals.onResponse({ 
-                      text: output['text'],
-                      files: files
-                    });
+                  const cid = res.headers.get('x-conversation-id');
+                  if (cid) {
+                    sessionStorage.setItem('conversationId', cid)
+                  }
+                  console.log(res);
+                  return res.json()
+                }).then(output => {
+                  const files = [];
+                  if ('image' in output) {
+                    for (const image of output['image']) {
+                      files.push({src: `data:${image.content_type};base64,${image.content}`, type: 'image'});
+                    }
+                  }
+                  console.log('getting here weird')
+                  signals.onResponse({ 
+                    text: output['text'],
+                    files: files
                   });
+                }).catch(err => err.json()).then(message => {
+                  console.error(`Received error from backend server during conversation: ${message['detail']}`);
+                  signals.onResponse({
+                    error: message['detail']
+                  });
+                });
               }
             }}
             style={{ borderRadius: "10px", borderTopLeftRadius: 0, borderTopRightRadius: 0, borderTop: 'none' }}
@@ -121,6 +135,9 @@ export default function Chatbot({ initialMessages, cid }: Props) {
             initialMessages={messages}
             mixedFiles={true}
             introMessage={{ text: 'Hi, I am your assistant, ask me anything!' }}
+            errorMessages={{
+              displayServiceErrorMessages: true
+            }}
             // stream={{simulation: true}}
           />
         </div>
