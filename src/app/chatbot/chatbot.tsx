@@ -6,7 +6,6 @@ import FloatingButton from "./floating-button";
 import { DeepChat } from "deep-chat-react";
 import { MessageContent } from "@/type/chatbot";
 
-export const LANGCHAIN_SERVER_URL = process.env.NEXT_PUBLIC_LANGCHAIN_SERVER_URL
 type Props = {
   initialMessages: MessageContent[],
   cid: string,
@@ -94,7 +93,6 @@ export default function Chatbot({ initialMessages, cid }: Props) {
                   }
                 }
 
-                console.log(`LANGCHAIN_SERVER_URL: ${LANGCHAIN_SERVER_URL}`)
                 fetch(`/api/langchains/conversate`, {
                   method: 'POST',
                   headers: headers,

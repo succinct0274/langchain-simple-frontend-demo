@@ -15,6 +15,6 @@ export default async function Home({ searchParams }: Props) {
   console.log(conversationId)
 
   return (
-    <DescriptionWithFloatingButton />
+    <DescriptionWithFloatingButton messages={messages} conversationId={conversationId} />
   )
 }
