@@ -1,26 +1,8 @@
-
 import Chatbot from "@/app/chatbot/chatbot";
 import { fetchConversationHistory } from "@/lib/fetchConversationHistory";
-
-type FileInfo = {
-  filename: string
-  mime_type: string
-}
-
-type RespondedFile = {
-  content: string
-  content_type: string
-}
-
-export type ConversationHistory = {
-  id: number
-  role: string
-  human_message: string
-  ai_message: string
-  conversation_id: string
-  uploaded_file_detail: FileInfo[]
-  responded_media: RespondedFile[]
-}
+import DescriptionList from "./description-list";
+import { ConversationHistory } from "@/type/chatbot";
+import DescriptionWithFloatingButton from "./description-with-floating-button";
 
 type Props = {
   searchParams: {uuid: string}
@@ -33,6 +15,6 @@ export default async function Home({ searchParams }: Props) {
   console.log(conversationId)
 
   return (
-    <Chatbot initialMessages={messages} cid={conversationId} />
+    <DescriptionWithFloatingButton />
   )
 }

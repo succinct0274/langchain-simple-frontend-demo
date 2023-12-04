@@ -3,12 +3,12 @@ import dynamic from "next/dynamic";
 import { useEffect, useRef, useState } from "react";
 import ChatbotHeader from "./chatbot-header";
 import FloatingButton from "./floating-button";
-import { ConversationHistory } from "@/app/chatbot/page";
 import { DeepChat } from "deep-chat-react";
+import { MessageContent } from "@/type/chatbot";
 
 export const LANGCHAIN_SERVER_URL = process.env.NEXT_PUBLIC_LANGCHAIN_SERVER_URL
 type Props = {
-  initialMessages: Array<any>,
+  initialMessages: MessageContent[],
   cid: string,
 }
 
@@ -19,7 +19,7 @@ type ChatResponse = {
 
 export default function Chatbot({ initialMessages, cid }: Props) {
   const [conversationId, setConversationId] = useState<string>(cid);
-  const [messages, setMessages] = useState<ConversationHistory[]>(initialMessages);
+  const [messages, setMessages] = useState<MessageContent[]>(initialMessages);
   const ref = useRef<HTMLDivElement>(null);
   const [closed, setClosed] = useState(true);
 

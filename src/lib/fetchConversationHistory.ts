@@ -1,8 +1,8 @@
-import { ConversationHistory } from "@/app/chatbot/page";
+import { ConversationHistory, ConversationHistoryResponse } from "@/type/chatbot";
 
 const LANGCHAIN_SERVER_URL = process.env.LANGCHAIN_SERVER_URL
 
-export const fetchConversationHistory = async (uuid: string) => {
+export const fetchConversationHistory: (uuid: string) => Promise<ConversationHistoryResponse> = async (uuid: string) => {
   const headers = new Headers();
   headers.append('X-Conversation-Id', uuid);
 
