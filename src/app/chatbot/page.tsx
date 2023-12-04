@@ -1,7 +1,4 @@
-import Chatbot from "@/app/chatbot/chatbot";
 import { fetchConversationHistory } from "@/lib/fetchConversationHistory";
-import DescriptionList from "./description-list";
-import { ConversationHistory } from "@/type/chatbot";
 import DescriptionWithFloatingButton from "./description-with-floating-button";
 
 type Props = {

@@ -8,7 +8,8 @@ import { MessageContent } from "@/type/chatbot";
 
 type Props = {
   initialMessages: MessageContent[],
-  cid: string,
+  conversationId: string,
+  setConversationId: (cid: string) => void
 }
 
 type ChatResponse = {
@@ -16,9 +17,9 @@ type ChatResponse = {
   image: string
 };
 
-export default function Chatbot({ initialMessages, cid }: Props) {
-  const [conversationId, setConversationId] = useState<string>(cid);
-  const [messages, setMessages] = useState<MessageContent[]>(initialMessages);
+export default function Chatbot(props: Props) {
+  const { conversationId, setConversationId } = props;
+  const [messages, setMessages] = useState<MessageContent[]>(props.initialMessages);
   const ref = useRef<HTMLDivElement>(null);
   const [closed, setClosed] = useState(true);
 
@@ -56,6 +57,7 @@ export default function Chatbot({ initialMessages, cid }: Props) {
     return [question, files];
   }
 
+  let setted = false;
   return (
     <>
       <FloatingButton toggleCloseButton={toggleCloseButton} style={{position: 'fixed', bottom: '5vh', right: '10vw', zIndex: 1}} />
@@ -104,7 +106,7 @@ export default function Chatbot({ initialMessages, cid }: Props) {
 
                   const cid = res.headers.get('x-conversation-id');
                   if (cid) {
-                    sessionStorage.setItem('conversationId', cid)
+                    sessionStorage.setItem('conversationId', cid);
                   }
                   console.log(res);
                   return res.json()
@@ -115,13 +117,17 @@ export default function Chatbot({ initialMessages, cid }: Props) {
                       files.push({src: `data:${image.content_type};base64,${image.content}`, type: 'image'});
                     }
                   }
-                  console.log('getting here weird')
+
                   signals.onResponse({ 
                     text: output['text'],
                     files: files
                   });
-                }).catch(err => err.json()).then(message => {
-                  console.error(`Received error from backend server during conversation: ${message['detail']}`);
+
+                  return Promise.resolve();
+                })
+                .catch(async err => {
+                  const message = await err.json();
+                  console.error(`Received error from backend server during conversation: ${message}`);
                   signals.onResponse({
                     error: message['detail']
                   });
