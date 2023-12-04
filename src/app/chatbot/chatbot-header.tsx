@@ -4,12 +4,13 @@ import '../globals.css'
 
 type Props = {
   toggleCloseButton: () => void,
+  style: any
 }
 
-export default function ChatbotHeader({ toggleCloseButton }: Props) {
+export default function ChatbotHeader({ toggleCloseButton, style }: Props) {
 
   return (
-    <div className='flex justify-end bg-white' style={{border: '1px solid rgb(202,202,202)', borderTopLeftRadius: '10px', borderTopRightRadius: '10px'}}>
+    <div className='flex justify-end bg-white' style={{...style, border: '1px solid rgb(202,202,202)', borderTopLeftRadius: '10px', borderTopRightRadius: '10px'}}>
       <button 
         type="button" 
         className="bg-white rounded-md p-2 inline-flex items-center justify-end text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500"
