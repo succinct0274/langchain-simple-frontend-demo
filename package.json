@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "cors": "^2.8.5",
-    "deep-chat-react": "^1.4.1",
+    "deep-chat-react": "^1.4.4",
     "next": "^14.0.3",
     "react": "^18",
     "react-dom": "^18"

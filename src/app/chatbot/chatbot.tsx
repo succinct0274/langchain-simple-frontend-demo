@@ -34,12 +34,9 @@ export default function Chatbot(props: Props) {
     setClosed(!closed);
   }
 
-  // const DeepChat = dynamic(
-  //   () => import("deep-chat-react").then((mod) => mod.DeepChat),
-  //   {
-  //     ssr: false,
-  //   },
-  // );
+  // const DeepChat = dynamic(() => import('deep-chat-react').then((mod) => mod.DeepChat), {
+  //   ssr: false,
+  // });
 
   const processFormData: (body: FormData) => readonly [string, Array<File>] = (body: FormData) => {
     // Assume body is using form data as mixedFiles enabled
@@ -63,7 +60,7 @@ export default function Chatbot(props: Props) {
       <FloatingButton toggleCloseButton={toggleCloseButton} style={{position: 'fixed', bottom: '5vh', right: '10vw', zIndex: 1}} />
       {
         !closed && <div key='chatbot-dialog' ref={ref} style={{position: 'fixed', bottom: '2vh', right: '5vw', zIndex: 1}}>
-          <ChatbotHeader toggleCloseButton={toggleCloseButton} />
+          {/* <ChatbotHeader toggleCloseButton={toggleCloseButton} /> */}
           <DeepChat
             request={{
               handler: async (body, signals: any) => {
@@ -143,7 +140,7 @@ export default function Chatbot(props: Props) {
             errorMessages={{
               displayServiceErrorMessages: true
             }}
-            // stream={{simulation: true}}
+            stream={{simulation: true}}
           />
         </div>
       }  

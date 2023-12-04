@@ -1,15 +1,21 @@
 'use client'
 import { useEffect, useState } from "react";
 
-export default function DescriptionList() {
-  const [conversationId, setConversationId] = useState<string>('');
+type Props = {
+  conversationId: string,
+  setConversationId: (arg: string) => void,
+}
+
+export default function DescriptionList(props: Props) {
+  const [conversationId, setConversationId] = useState(props.conversationId);
 
   useEffect(() => {
     window.addEventListener('storage', () => {
-      setConversationId(sessionStorage.getItem('conversationId') ?? '')
+      const res = sessionStorage.getItem('conversationId');
+      if (res) setConversationId(res);
     })
 
-    setConversationId(sessionStorage.getItem('conversationId') as string);
+    // setConversationId(sessionStorage.getItem('conversationId') as string);
   }, [])
 
   return (

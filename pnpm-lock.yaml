@@ -9,8 +9,8 @@ dependencies:
     specifier: ^2.8.5
     version: 2.8.5
   deep-chat-react:
-    specifier: ^1.4.1
-    version: 1.4.1(react@18.2.0)
+    specifier: ^1.4.4
+    version: 1.4.4(react@18.2.0)
   next:
     specifier: ^14.0.3
     version: 14.0.3(react-dom@18.2.0)(react@18.2.0)
@@ -740,18 +740,18 @@ packages:
       ms: 2.1.2
     dev: true
 
-  /deep-chat-react@1.4.1(react@18.2.0):
-    resolution: {integrity: sha512-CPL2QxlXe5cd8P4XlKLqJOtmAWKm86MHw4vqL5l9FFeLC44XK7ru+heFMd6nnz7OuvoxJOodws0Nq2ajhRxvMg==}
+  /deep-chat-react@1.4.4(react@18.2.0):
+    resolution: {integrity: sha512-WZA04JBGqGhzr597MUkWS074hM3sgCjh3tKQTKgovIXtM+s95z7CAEa9IDAqMYIUPTL918/E8cmmES7AHSHryA==}
     peerDependencies:
       react: '>=16.8.0 || >=17.0.0 || >=18.0.0'
     dependencies:
       '@lit-labs/react': 1.2.1
-      deep-chat: 1.4.1
+      deep-chat: 1.4.4
       react: 18.2.0
     dev: false
 
-  /deep-chat@1.4.1:
-    resolution: {integrity: sha512-GERbeorV1D1uijGF3Z+CiRITVgERSIXkFZJp7Kv17D1SI+492p2E5fNsS2i5KBucGWVoDG/TK9Bc8x7WD/09Qg==}
+  /deep-chat@1.4.4:
+    resolution: {integrity: sha512-nD/K+ekjYzzqQDa8XeE0UrbM7q2mTyKFfoKI6q1dLecBBsLVIQ3zK08KftT8ZQgGneoGTITAIPmjiZsg7yQNQw==}
     dependencies:
       '@microsoft/fetch-event-source': 2.0.1
       remarkable: 2.0.1

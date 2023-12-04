@@ -16,7 +16,7 @@ export default function DescriptionWithFloatingButton(props: Props) {
   return (
     <>
       <div className="h-screen px-60 pt-20">
-        <DescriptionList />
+        <DescriptionList conversationId={conversationId} setConversationId={setConversationId}  />
       </div>
       <Chatbot initialMessages={messages} conversationId={conversationId} setConversationId={setConversationId} />
     </>
