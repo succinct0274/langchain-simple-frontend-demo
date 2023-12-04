@@ -26,6 +26,7 @@ export default function Chatbot(props: Props) {
   useEffect(() => {
     if (!!conversationId) {
       sessionStorage.setItem('conversationId', conversationId);
+      window.dispatchEvent(new Event('storage'));
     }
   }, []);
 
@@ -38,7 +39,7 @@ export default function Chatbot(props: Props) {
   //   {
   //     ssr: false,
   //   },
-  // )
+  // );
 
   const processFormData: (body: FormData) => readonly [string, Array<File>] = (body: FormData) => {
     // Assume body is using form data as mixedFiles enabled
@@ -57,7 +58,6 @@ export default function Chatbot(props: Props) {
     return [question, files];
   }
 
-  let setted = false;
   return (
     <>
       <FloatingButton toggleCloseButton={toggleCloseButton} style={{position: 'fixed', bottom: '5vh', right: '10vw', zIndex: 1}} />
@@ -107,6 +107,7 @@ export default function Chatbot(props: Props) {
                   const cid = res.headers.get('x-conversation-id');
                   if (cid) {
                     sessionStorage.setItem('conversationId', cid);
+                    window.dispatchEvent(new Event('storage'));
                   }
                   console.log(res);
                   return res.json()
