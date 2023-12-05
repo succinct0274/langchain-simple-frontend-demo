@@ -1,15 +1,17 @@
 name: Deploy image to private registry
 on:
-  workflow_dispatch:
+  push:
+    branches:
+      - main
 
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
-    environment: 'Altech Digital Ocean Container Registry'
+    environment: "Altech Digital Ocean Container Registry"
     env:
       REGISTRY_API_TOKEN: ${{ secrets.REGISTRY_API_TOKEN }}
       REGISTRY_API_URL: ${{ vars.REGISTRY_API_URL }}
-      REGISTRY_NAME: ${{ vars.REGISTRY_NAME }}    
+      REGISTRY_NAME: ${{ vars.REGISTRY_NAME }}
     steps:
       - name: Checkout
         uses: actions/checkout@v3
