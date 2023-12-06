@@ -23,7 +23,17 @@ export default function DescriptionList(props: Props) {
     })
 
     // setConversationId(sessionStorage.getItem('conversationId') as string);
+
+    if (conversationId) {
+      loadUploadedFiles(conversationId);
+    }
   }, [])
+
+  const loadUploadedFiles = (conversationId: string) => {
+    return fetch(`/api/langchains/${conversationId}/files`)
+      .then(res => res.json())
+      .then(files => setFilesWithDescription(files));
+  }
 
   const submitFiles = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -48,11 +58,9 @@ export default function DescriptionList(props: Props) {
         return Promise.reject("Unable to retrieve session id from backend server")
       }
       
-      const conversationId = res.headers.get('x-conversation-id');
-      return fetch(`/api/langchains/${conversationId}/files`)
+      const conversationId = res.headers.get('x-conversation-id') as string;
+      return loadUploadedFiles(conversationId);
     })
-    .then(res => res.json())
-    .then(files => setFilesWithDescription(files))
     .catch(message => window.alert(message));
   }
 
