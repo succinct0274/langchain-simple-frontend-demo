@@ -13,6 +13,6 @@ export async function GET(
   return fetch(`${LANGCHAIN_SERVER_URL}/langchains/${conversationId}/files`, {
     method: "GET",
     next: { revalidate: 0 },
-    cache: "no-cache",
+    cache: "no-store",
   });
 }
