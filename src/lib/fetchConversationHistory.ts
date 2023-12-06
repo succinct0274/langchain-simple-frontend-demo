@@ -15,10 +15,7 @@ export const fetchConversationHistory: (
   const res = await fetch(`${LANGCHAIN_SERVER_URL}/langchains/conversate`, {
     method: "GET",
     headers: headers,
-    cache: "no-store",
-    next: {
-      revalidate: 0,
-    },
+    next: { revalidate: 0 },
   });
 
   if (res.status !== 200) {

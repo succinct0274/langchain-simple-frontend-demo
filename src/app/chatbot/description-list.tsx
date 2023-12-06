@@ -1,9 +1,8 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 type Props = {
   conversationId: string;
-  setConversationId: (arg: string) => void;
 };
 
 type FileWithDescription = {
@@ -12,39 +11,30 @@ type FileWithDescription = {
   content_type: string;
 };
 
-export default function DescriptionList(props: Props) {
-  const [conversationId, setConversationId] = useState(props.conversationId);
+export default function DescriptionList({ conversationId }: Props) {
   const [filesWithDescription, setFilesWithDescription] = useState<
     FileWithDescription[]
   >([]);
 
-  useEffect(() => {
-    window.addEventListener("storage", () => {
-      const res = sessionStorage.getItem("conversationId");
-      if (res) setConversationId(res);
-    });
-
-    // setConversationId(sessionStorage.getItem('conversationId') as string);
-  }, []);
-
-  useEffect(() => {
-    if (!conversationId) return;
-    loadUploadedFiles(conversationId);
-  }, [conversationId]);
-
-  const loadUploadedFiles = (conversationId: string) => {
-    return fetch(`/api/langchains/${conversationId}/files`, {
-      cache: "no-store",
+  const loadUploadedFiles = useCallback(async () => {
+    const res = await fetch(`/api/langchains/${conversationId}/files`, {
+      method: "GET",
       next: {
         revalidate: 0,
       },
-    })
-      .then((res) => res.json())
-      .then((files) => {
-        console.log(files);
-        setFilesWithDescription(files);
-      });
-  };
+    });
+    console.log(res.body);
+    const data = await res.json();
+    console.log(data);
+    setFilesWithDescription(data ?? []);
+  }, [conversationId]);
+
+  useEffect(() => {
+    if (conversationId) {
+      console.log(conversationId);
+      loadUploadedFiles();
+    }
+  }, [conversationId, loadUploadedFiles]);
 
   const submitFiles = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -62,7 +52,6 @@ export default function DescriptionList(props: Props) {
       method: "POST",
       headers,
       body: formData,
-      cache: "no-store",
     })
       .then((res) => {
         if (!res.headers.has("x-conversation-id")) {
@@ -71,8 +60,7 @@ export default function DescriptionList(props: Props) {
           );
         }
 
-        const conversationId = res.headers.get("x-conversation-id") as string;
-        return loadUploadedFiles(conversationId);
+        loadUploadedFiles();
       })
       .catch((message) => window.alert(message));
   };

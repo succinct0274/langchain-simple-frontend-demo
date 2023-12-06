@@ -13,14 +13,9 @@ export default async function Home({ searchParams }: Props) {
     //redirect to chat page
     redirect("/chat");
   }
-  const { messages, conversationId } = await fetchConversationHistory(uuid);
-
+  const { messages } = await fetchConversationHistory(uuid);
   //chat params is uuid or not
-
   return (
-    <DescriptionWithFloatingButton
-      messages={messages}
-      conversationId={conversationId}
-    />
+    <DescriptionWithFloatingButton messages={messages} conversationId={uuid} />
   );
 }

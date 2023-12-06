@@ -1,24 +1,22 @@
-'use client'
-import { ConversationHistoryResponse, MessageContent } from "@/type/chatbot";
+"use client";
+import { MessageContent } from "@/type/chatbot";
 import Chatbot from "./chatbot";
 import DescriptionList from "./description-list";
-import { useState } from "react";
 
 type Props = {
-  messages: MessageContent[],
-  conversationId: string,
-}
+  messages: MessageContent[];
+  conversationId: string;
+};
 
 export default function DescriptionWithFloatingButton(props: Props) {
-  const messages = props.messages
-  const [conversationId, setConversationId] = useState(props.conversationId)
+  const { messages, conversationId } = props;
 
   return (
     <>
       <div className="h-screen px-60 pt-20">
-        <DescriptionList conversationId={conversationId} setConversationId={setConversationId}  />
+        <DescriptionList conversationId={conversationId} />
       </div>
-      <Chatbot initialMessages={messages} conversationId={conversationId} setConversationId={setConversationId} />
+      <Chatbot initialMessages={messages} conversationId={conversationId} />
     </>
-  )
+  );
 }
