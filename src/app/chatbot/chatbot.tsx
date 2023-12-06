@@ -128,7 +128,7 @@ export default function Chatbot(props: Props) {
                   const cid = res.headers.get("x-conversation-id");
                   if (cid) {
                     sessionStorage.setItem("conversationId", cid);
-                    setsessionId(cid);
+                    // setsessionId(cid);
                     window.dispatchEvent(new Event("storage"));
                   }
                   console.log(res);
