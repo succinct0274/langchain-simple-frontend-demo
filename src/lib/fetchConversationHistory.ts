@@ -9,7 +9,8 @@ export const fetchConversationHistory: (uuid: string) => Promise<ConversationHis
   console.log(`LANGCHAIN_SERVER_URL: ${LANGCHAIN_SERVER_URL}`)
   const res = await fetch(`${LANGCHAIN_SERVER_URL}/langchains/conversate`, {
     method: 'GET',
-    headers: headers
+    headers: headers,
+    cache: 'no-store',
   });
 
   if (res.status !== 200) {
