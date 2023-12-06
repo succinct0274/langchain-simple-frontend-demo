@@ -23,16 +23,20 @@ export default function DescriptionList(props: Props) {
     })
 
     // setConversationId(sessionStorage.getItem('conversationId') as string);
-
-    if (conversationId) {
-      loadUploadedFiles(conversationId);
-    }
   }, [])
 
+  useEffect(() => {
+    if (!conversationId) return;
+    loadUploadedFiles(conversationId);
+  }, [conversationId])
+
   const loadUploadedFiles = (conversationId: string) => {
-    return fetch(`/api/langchains/${conversationId}/files`)
+    return fetch(`/api/langchains/${conversationId}/files`, {cache: 'no-store'})
       .then(res => res.json())
-      .then(files => setFilesWithDescription(files));
+      .then(files => {
+        console.log(files)
+        setFilesWithDescription(files)
+      });
   }
 
   const submitFiles = (e: React.FormEvent<HTMLFormElement>) => {
@@ -51,6 +55,7 @@ export default function DescriptionList(props: Props) {
       method: 'POST',
       headers,
       body: formData,
+      cache: 'no-store',
     })
     .then(res => {
 
