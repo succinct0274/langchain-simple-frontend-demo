@@ -18,6 +18,36 @@ export default function DescriptionList(props: Props) {
     // setConversationId(sessionStorage.getItem('conversationId') as string);
   }, [])
 
+  const submitFiles = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    console.log(e)
+    console.log(e.target)
+
+    const headers: any = {};
+    if (conversationId) {
+     headers['X-Conversation-Id'] = conversationId 
+    }
+
+    const formData = new FormData(e.target as HTMLFormElement);
+    // const formProps = Object.fromEntries(formData)
+    fetch('/api/langchains/files', {
+      method: 'POST',
+      headers,
+      body: formData,
+    }).then(res => {
+
+      if (!res.headers.has('x-conversation-id')) {
+        return Promise.reject("Unable to retrieve session id from backend server")
+      }
+      
+      const conversationId = res.headers.get('x-conversation-id');
+      return fetch(`/api/langchains/${conversationId}/files`)
+    }).then(res => {
+      console.log(res);
+      return res.json();
+    }).catch(message => window.alert(message));
+  }
+
   return (
     <div className="bg-white p-4 rounded-lg">
       <div className="px-4 sm:px-0">
@@ -31,7 +61,13 @@ export default function DescriptionList(props: Props) {
             <dd className="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">{conversationId}</dd>
           </div>
           <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
-            <dt className="text-sm font-medium leading-6 text-gray-900">Attachments</dt>
+            <dt className="text-sm font-medium leading-6 text-gray-900">
+              Attachments
+              <form onSubmit={submitFiles} className="flex justify-between items-center	">
+                <input style={{display: 'block', maxWidth: '10rem'}} multiple name="files" type="file" accept=".xlsx,.pdf"/>
+                <button className="block border p-1 rounded-md" type="submit">Upload</button>
+              </form>
+            </dt>
             <dd className="mt-2 text-sm text-gray-900 sm:col-span-2 sm:mt-0">
               <ul role="list" className="divide-y divide-gray-100 rounded-md border border-gray-200">
                 <li className="flex items-center justify-between py-4 pl-4 pr-5 text-sm leading-6">
