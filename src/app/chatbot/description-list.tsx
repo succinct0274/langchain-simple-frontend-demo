@@ -6,8 +6,15 @@ type Props = {
   setConversationId: (arg: string) => void,
 }
 
+type FileWithDescription = {
+  filename: string,
+  upload_date: number,
+  content_type: string,
+}
+
 export default function DescriptionList(props: Props) {
   const [conversationId, setConversationId] = useState(props.conversationId);
+  const [filesWithDescription, setFilesWithDescription] = useState<FileWithDescription[]>([]);
 
   useEffect(() => {
     window.addEventListener('storage', () => {
@@ -34,7 +41,8 @@ export default function DescriptionList(props: Props) {
       method: 'POST',
       headers,
       body: formData,
-    }).then(res => {
+    })
+    .then(res => {
 
       if (!res.headers.has('x-conversation-id')) {
         return Promise.reject("Unable to retrieve session id from backend server")
@@ -42,10 +50,10 @@ export default function DescriptionList(props: Props) {
       
       const conversationId = res.headers.get('x-conversation-id');
       return fetch(`/api/langchains/${conversationId}/files`)
-    }).then(res => {
-      console.log(res);
-      return res.json();
-    }).catch(message => window.alert(message));
+    })
+    .then(res => res.json())
+    .then(files => setFilesWithDescription(files))
+    .catch(message => window.alert(message));
   }
 
   return (
@@ -70,34 +78,21 @@ export default function DescriptionList(props: Props) {
             </dt>
             <dd className="mt-2 text-sm text-gray-900 sm:col-span-2 sm:mt-0">
               <ul role="list" className="divide-y divide-gray-100 rounded-md border border-gray-200">
-                <li className="flex items-center justify-between py-4 pl-4 pr-5 text-sm leading-6">
-                  <div className="flex w-0 flex-1 items-center">
-                    <svg className="h-5 w-5 flex-shrink-0 text-gray-400" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                      <path fillRule="evenodd" d="M15.621 4.379a3 3 0 00-4.242 0l-7 7a3 3 0 004.241 4.243h.001l.497-.5a.75.75 0 011.064 1.057l-.498.501-.002.002a4.5 4.5 0 01-6.364-6.364l7-7a4.5 4.5 0 016.368 6.36l-3.455 3.553A2.625 2.625 0 119.52 9.52l3.45-3.451a.75.75 0 111.061 1.06l-3.45 3.451a1.125 1.125 0 001.587 1.595l3.454-3.553a3 3 0 000-4.242z" clipRule="evenodd" />
-                    </svg>
-                    <div className="ml-4 flex min-w-0 flex-1 gap-2">
-                      <span className="truncate font-medium">resume_back_end_developer.pdf</span>
-                      <span className="flex-shrink-0 text-gray-400">2.4mb</span>
-                    </div>
-                  </div>
-                  <div className="ml-4 flex-shrink-0">
-                    <a href="#" className="font-medium text-indigo-600 hover:text-indigo-500">Download</a>
-                  </div>
-                </li>
-                <li className="flex items-center justify-between py-4 pl-4 pr-5 text-sm leading-6">
-                  <div className="flex w-0 flex-1 items-center">
-                    <svg className="h-5 w-5 flex-shrink-0 text-gray-400" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                      <path fillRule="evenodd" d="M15.621 4.379a3 3 0 00-4.242 0l-7 7a3 3 0 004.241 4.243h.001l.497-.5a.75.75 0 011.064 1.057l-.498.501-.002.002a4.5 4.5 0 01-6.364-6.364l7-7a4.5 4.5 0 016.368 6.36l-3.455 3.553A2.625 2.625 0 119.52 9.52l3.45-3.451a.75.75 0 111.061 1.06l-3.45 3.451a1.125 1.125 0 001.587 1.595l3.454-3.553a3 3 0 000-4.242z" clipRule="evenodd" />
-                    </svg>
-                    <div className="ml-4 flex min-w-0 flex-1 gap-2">
-                      <span className="truncate font-medium">coverletter_back_end_developer.pdf</span>
-                      <span className="flex-shrink-0 text-gray-400">4.5mb</span>
-                    </div>
-                  </div>
-                  <div className="ml-4 flex-shrink-0">
-                    <a href="#" className="font-medium text-indigo-600 hover:text-indigo-500">Download</a>
-                  </div>
-                </li>
+                {
+                  filesWithDescription.map((fwd, idx) => (
+                    <li key={idx} className="flex items-center justify-between py-4 pl-4 pr-5 text-sm leading-6">
+                      <div className="flex w-0 flex-1 items-center">
+                        <svg className="h-5 w-5 flex-shrink-0 text-gray-400" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                          <path fillRule="evenodd" d="M15.621 4.379a3 3 0 00-4.242 0l-7 7a3 3 0 004.241 4.243h.001l.497-.5a.75.75 0 011.064 1.057l-.498.501-.002.002a4.5 4.5 0 01-6.364-6.364l7-7a4.5 4.5 0 016.368 6.36l-3.455 3.553A2.625 2.625 0 119.52 9.52l3.45-3.451a.75.75 0 111.061 1.06l-3.45 3.451a1.125 1.125 0 001.587 1.595l3.454-3.553a3 3 0 000-4.242z" clipRule="evenodd" />
+                        </svg>
+
+                        <div className="ml-4 flex min-w-0 flex-1 gap-2">
+                          <span className="truncate font-medium">{fwd.filename}</span>
+                        </div>
+                      </div>
+                    </li>
+                  ))
+                }
               </ul>
             </dd>
           </div>
