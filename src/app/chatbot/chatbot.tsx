@@ -148,7 +148,9 @@ const Chatbot = ({ conversationId, initialMessages: messages }: Props) => {
                 placeholder: { text: "Talk to our AI assistant" },
               }}
               initialMessages={messages}
-              mixedFiles={true}
+              mixedFiles={{
+                files: {acceptedFormats: '.xlsx,.pdf'},
+              }}
               introMessage={{
                 text: "Hi, I am your assistant, ask me anything!",
               }}
