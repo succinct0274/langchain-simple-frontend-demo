@@ -27,7 +27,8 @@ export default function Home() {
       return;
     }
     e.preventDefault();
-    router.push("/chatbot?uuid=" + state.conversationId);
+    window.location.href = "/chatbot?uuid=" + state.conversationId;
+    window.location.reload();
   };
 
   //fetch initial messages

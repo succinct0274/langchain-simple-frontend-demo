@@ -1,14 +1,16 @@
-"use client";
 import { MessageContent } from "@/type/chatbot";
-import Chatbot from "./chatbot";
 import DescriptionList from "./description-list";
+import dynamic from "next/dynamic";
 
+const DynamicComponentWithNoSSR = dynamic(() => import("./chatbot"), {
+  ssr: false,
+});
 type Props = {
   messages: MessageContent[];
   conversationId: string;
 };
 
-export default function DescriptionWithFloatingButton(props: Props) {
+const DescriptionWithFloatingButton = (props: Props) => {
   const { messages, conversationId } = props;
 
   return (
@@ -16,7 +18,12 @@ export default function DescriptionWithFloatingButton(props: Props) {
       <div className="h-screen px-60 pt-20">
         <DescriptionList conversationId={conversationId} />
       </div>
-      <Chatbot initialMessages={messages} conversationId={conversationId} />
+      <DynamicComponentWithNoSSR
+        initialMessages={messages}
+        conversationId={conversationId}
+      />
     </>
   );
-}
+};
+
+export default DescriptionWithFloatingButton;
