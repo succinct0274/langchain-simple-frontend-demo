@@ -37,7 +37,7 @@ export default function Home() {
       setIsLoading(true);
       const LANGCHAIN_SERVER_URL = process.env.NEXT_PUBLIC_LANGCHAIN_SERVER_URL;
       const res = await fetch(
-        `${LANGCHAIN_SERVER_URL}/langchains/session/init`,
+        `${LANGCHAIN_SERVER_URL}/langchain/session/init`,
         {
           method: "POST",
         }

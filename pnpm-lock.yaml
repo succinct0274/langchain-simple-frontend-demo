@@ -1,12 +1,16 @@
 lockfileVersion: '6.0'
 
+settings:
+  autoInstallPeers: true
+  excludeLinksFromLockfile: false
+
 dependencies:
   cors:
     specifier: ^2.8.5
     version: 2.8.5
   deep-chat-react:
-    specifier: ^1.4.4
-    version: 1.4.4(react@18.2.0)
+    specifier: https://gitpkg.now.sh/succinct0274/deep-chat/other-packages/react?main
+    version: '@gitpkg.now.sh/succinct0274/deep-chat/other-packages/react?main(react@18.2.0)'
   next:
     specifier: ^14.0.3
     version: 14.0.3(react-dom@18.2.0)(react@18.2.0)
@@ -738,24 +742,6 @@ packages:
     dependencies:
       ms: 2.1.2
     dev: true
-
-  /deep-chat-react@1.4.4(react@18.2.0):
-    resolution: {integrity: sha512-WZA04JBGqGhzr597MUkWS074hM3sgCjh3tKQTKgovIXtM+s95z7CAEa9IDAqMYIUPTL918/E8cmmES7AHSHryA==}
-    peerDependencies:
-      react: '>=16.8.0 || >=17.0.0 || >=18.0.0'
-    dependencies:
-      '@lit-labs/react': 1.2.1
-      deep-chat: 1.4.4
-      react: 18.2.0
-    dev: false
-
-  /deep-chat@1.4.4:
-    resolution: {integrity: sha512-nD/K+ekjYzzqQDa8XeE0UrbM7q2mTyKFfoKI6q1dLecBBsLVIQ3zK08KftT8ZQgGneoGTITAIPmjiZsg7yQNQw==}
-    dependencies:
-      '@microsoft/fetch-event-source': 2.0.1
-      remarkable: 2.0.1
-      speech-to-element: 0.1.66
-    dev: false
 
   /deep-is@0.1.4:
     resolution: {integrity: sha512-oIPzksmTg4/MriiaYGO+okXDT7ztn/w3Eptv/+gSIdMdKsJo0u4CfYNFJPy+4SKMuCqGw2wxnA+URMg3t8a/bQ==}
@@ -2698,6 +2684,25 @@ packages:
     resolution: {integrity: sha512-iC+8Io04lddc+mVqQ9AZ7OQ2MrUKGN+oIQyq1vemgt46jwCwLfhq7/pwnBnNXXXZb8VTVLKwp9EDkx+ryxIWmg==}
     dev: false
 
-settings:
-  autoInstallPeers: true
-  excludeLinksFromLockfile: false
+  '@gitpkg.now.sh/succinct0274/deep-chat/component?main':
+    resolution: {tarball: https://gitpkg.now.sh/succinct0274/deep-chat/component?main}
+    name: deep-chat
+    version: 1.4.5
+    dependencies:
+      '@microsoft/fetch-event-source': 2.0.1
+      remarkable: 2.0.1
+      speech-to-element: 0.1.66
+    dev: false
+
+  '@gitpkg.now.sh/succinct0274/deep-chat/other-packages/react?main(react@18.2.0)':
+    resolution: {tarball: https://gitpkg.now.sh/succinct0274/deep-chat/other-packages/react?main}
+    id: '@gitpkg.now.sh/succinct0274/deep-chat/other-packages/react?main'
+    name: deep-chat-react
+    version: 1.4.5
+    peerDependencies:
+      react: '>=16.8.0 || >=17.0.0 || >=18.0.0'
+    dependencies:
+      '@lit-labs/react': 1.2.1
+      deep-chat: '@gitpkg.now.sh/succinct0274/deep-chat/component?main'
+      react: 18.2.0
+    dev: false

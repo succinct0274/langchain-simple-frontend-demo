@@ -12,7 +12,7 @@ export const fetchConversationHistory: (
   headers.append("X-Conversation-Id", uuid);
 
   console.log(`LANGCHAIN_SERVER_URL: ${LANGCHAIN_SERVER_URL}`);
-  const res = await fetch(`${LANGCHAIN_SERVER_URL}/langchains/conversate`, {
+  const res = await fetch(`${LANGCHAIN_SERVER_URL}/langchain/conversate`, {
     method: "GET",
     headers: headers,
     next: { revalidate: 0 },

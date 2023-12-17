@@ -1,9 +1,10 @@
 "use client";
 import { MessageContent } from "@/type/chatbot";
 import { DeepChat } from "deep-chat-react";
-import React, { useEffect, useState } from "react";
+import React, { MutableRefObject, useEffect, useRef, useState } from "react";
 import ChatbotHeader from "./chatbot-header";
 import FloatingButton from "./floating-button";
+import { record } from "zod";
 type Props = {
   initialMessages: MessageContent[];
   conversationId: string;
@@ -11,6 +12,32 @@ type Props = {
 
 const Chatbot = ({ conversationId, initialMessages: messages }: Props) => {
   const [closed, setClosed] = useState(false);
+  const deepChatRef: MutableRefObject<any> = useRef();
+  let observer: MutationObserver;
+
+  useEffect(() => {
+    const elem = deepChatRef.current as any;
+    elem.onComponentRender = () => {
+      const shadowRoot = elem.shadowRoot as ShadowRoot;
+      const fileButton = shadowRoot.querySelector('#input') as HTMLDivElement;
+      const callback: MutationCallback = (records: MutationRecord[]) => {
+        const targetNode = records.map(r => r.addedNodes)
+          .flatMap(nodes => nodes)
+          .map(nl => nl[0] as Element)
+          .filter(node => !!node)
+          .find((elem: Element) => elem.classList.contains('file-attachment'))
+        
+        if (!targetNode) return;
+
+        // Send file to backend server
+        // fetch(`/api/langchains/${conversationId}/files`, )
+      }
+      observer = new MutationObserver(callback);
+
+      observer.observe(fileButton, {attributes: false, childList: true, subtree: true})
+    }
+    
+  }, [])
 
   const toggleCloseButton = () => {
     console.log("[open]");
@@ -134,6 +161,7 @@ const Chatbot = ({ conversationId, initialMessages: messages }: Props) => {
           />
           {conversationId && (
             <DeepChat
+              ref={deepChatRef}
               request={{
                 handler: handler,
               }}

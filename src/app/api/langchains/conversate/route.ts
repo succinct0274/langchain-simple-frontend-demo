@@ -18,7 +18,7 @@ export async function POST(
     headers["X-Conversation-Id"] = conversationId;
   }
 
-  return fetch(`${LANGCHAIN_SERVER_URL}/langchains/conversate`, {
+  return fetch(`${LANGCHAIN_SERVER_URL}/langchain/conversate`, {
     method: "POST",
     headers: headers,
     body: await req.formData(),
