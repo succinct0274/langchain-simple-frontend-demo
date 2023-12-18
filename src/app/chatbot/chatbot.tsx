@@ -9,17 +9,23 @@ type Props = {
   conversationId: string;
 };
 
+type UploadedFileMetadata = {
+  filename: string;
+  upload_date: number;
+  content_type: string;
+}
+
 const Chatbot = ({ conversationId, initialMessages: messages }: Props) => {
   const [closed, setClosed] = useState(false);
   const deepChatRef: MutableRefObject<any> = useRef();
-  let uploadedFiles: Set<any> = new Set();
+  let uploadedFiles: Set<UploadedFileMetadata> = new Set();
   let observer: MutationObserver;
 
   useEffect(() => {
     const elem = deepChatRef.current as any;
     elem.onAttachmentChange = (attachements: any[], file: File) => {
       if (attachements.length < uploadedFiles.size) {
-        const newSet = new Set();
+        const newSet = new Set<UploadedFileMetadata>();
         const unique = new Set(attachements.map(a => a.file as File).map(f => f.name));
         
         uploadedFiles.forEach(uf => { if (unique.has(uf.filename)) newSet.add(uf) });
