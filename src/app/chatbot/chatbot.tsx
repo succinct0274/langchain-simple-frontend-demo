@@ -4,6 +4,7 @@ import { DeepChat } from "deep-chat-react";
 import React, { MutableRefObject, useEffect, useRef, useState } from "react";
 import ChatbotHeader from "./chatbot-header";
 import FloatingButton from "./floating-button";
+import { publish } from '../../lib/event';
 type Props = {
   initialMessages: MessageContent[];
   conversationId: string;
@@ -46,6 +47,8 @@ const Chatbot = ({ conversationId, initialMessages: messages }: Props) => {
         for (const uploaded of list) {
           uploadedFiles.add(uploaded);
         }
+      
+        publish('updateFileList', list);
       })
     };
     

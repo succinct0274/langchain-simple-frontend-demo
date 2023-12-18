@@ -1,4 +1,5 @@
 "use client";
+import { subscribe, unsubscribe } from "@/lib/event";
 import { useCallback, useEffect, useState } from "react";
 
 type Props = {
@@ -18,7 +19,9 @@ export default function DescriptionList({ conversationId }: Props) {
 
   const [loading, setLoading] = useState<boolean>(false);
 
-  const loadUploadedFiles = useCallback(async () => {
+
+  const loadUploadedFiles = async () => {
+    console.log('getting here')
     const res = await fetch(`/api/langchains/${conversationId}/files`, {
       method: "GET",
       next: {
@@ -29,14 +32,27 @@ export default function DescriptionList({ conversationId }: Props) {
     const data = await res.json();
     console.log(data);
     setFilesWithDescription(data ?? []);
-  }, [conversationId]);
+  };
 
   useEffect(() => {
-    if (conversationId) {
+    const listener = () => {
+      loadUploadedFiles()
+    };
+
+    subscribe('updateFileList', listener)
+    return () => {
+      console.log('unmount')
+      unsubscribe('updateFileList', listener)
+    }
+  }, [])
+
+  useEffect(() => {
+    if (conversationId) {      
       console.log(conversationId);
       loadUploadedFiles();
     }
-  }, [conversationId, loadUploadedFiles]);
+
+  }, [conversationId]);
 
   const submitFiles = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
