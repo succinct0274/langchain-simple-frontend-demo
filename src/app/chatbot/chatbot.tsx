@@ -4,7 +4,6 @@ import { DeepChat } from "deep-chat-react";
 import React, { MutableRefObject, useEffect, useRef, useState } from "react";
 import ChatbotHeader from "./chatbot-header";
 import FloatingButton from "./floating-button";
-import { record } from "zod";
 type Props = {
   initialMessages: MessageContent[];
   conversationId: string;
@@ -13,29 +12,36 @@ type Props = {
 const Chatbot = ({ conversationId, initialMessages: messages }: Props) => {
   const [closed, setClosed] = useState(false);
   const deepChatRef: MutableRefObject<any> = useRef();
+  let uploadedFiles: Set<any> = new Set();
   let observer: MutationObserver;
 
   useEffect(() => {
     const elem = deepChatRef.current as any;
-    elem.onComponentRender = () => {
-      const shadowRoot = elem.shadowRoot as ShadowRoot;
-      const fileButton = shadowRoot.querySelector('#input') as HTMLDivElement;
-      const callback: MutationCallback = (records: MutationRecord[]) => {
-        const targetNode = records.map(r => r.addedNodes)
-          .flatMap(nodes => nodes)
-          .map(nl => nl[0] as Element)
-          .filter(node => !!node)
-          .find((elem: Element) => elem.classList.contains('file-attachment'))
+    elem.onAttachmentChange = (attachements: any[], file: File) => {
+      if (attachements.length < uploadedFiles.size) {
+        const newSet = new Set();
+        const unique = new Set(attachements.map(a => a.file as File).map(f => f.name));
         
-        if (!targetNode) return;
-
-        // Send file to backend server
-        // fetch(`/api/langchains/${conversationId}/files`, )
+        uploadedFiles.forEach(uf => { if (unique.has(uf.filename)) newSet.add(uf) });
+        uploadedFiles = newSet;
+        console.log(uploadedFiles);
+        return;
       }
-      observer = new MutationObserver(callback);
+      // Send files to the backend server once event triggered
+      const formData = new FormData();
+      for (const attachment of attachements) {
+        formData.append('files', attachment.file);
+      }
 
-      observer.observe(fileButton, {attributes: false, childList: true, subtree: true})
-    }
+      fetch(`/api/langchains/${conversationId}/files`, {
+        method: 'POST',
+        body: formData,
+      }).then(res => res.json()).then((list: any[]) => {
+        for (const uploaded of list) {
+          uploadedFiles.add(uploaded);
+        }
+      })
+    };
     
   }, [])
 

@@ -27,7 +27,7 @@ export async function GET(
   const { conversationId } = params;
   console.log("ConversationId: ", conversationId);
   const s = await fetch(
-    `${LANGCHAIN_SERVER_URL}/langchains/${conversationId}/files`,
+    `${LANGCHAIN_SERVER_URL}/langchain/${conversationId}/files`,
     {
       method: "GET",
       next: { revalidate: 0 },
