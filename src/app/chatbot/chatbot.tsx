@@ -10,6 +10,7 @@ type Props = {
 };
 
 type UploadedFileMetadata = {
+  file_id: string;
   filename: string;
   upload_date: number;
   content_type: string;
@@ -30,7 +31,6 @@ const Chatbot = ({ conversationId, initialMessages: messages }: Props) => {
         
         uploadedFiles.forEach(uf => { if (unique.has(uf.filename)) newSet.add(uf) });
         uploadedFiles = newSet;
-        console.log(uploadedFiles);
         return;
       }
       // Send files to the backend server once event triggered
@@ -68,24 +68,33 @@ const Chatbot = ({ conversationId, initialMessages: messages }: Props) => {
 
     // Define custom headers
     // const headers = new Headers();
+    console.log("Included custom header", conversationId);
     const headers: any = {};
     headers["X-Conversation-Id"] = conversationId;
-    console.log("Included custom header", conversationId);
+    headers['Content-Type'] = 'application/json';
 
-    // Define custom body
-    const formData = new FormData();
-    formData.append("question", question);
-
-    if (files != null) {
-      for (const file of files) {
-        formData.append("files", file);
+    // Construct request body
+    const json = {
+      'question': question,
+      'metadata': {
+        'attachment': [...uploadedFiles]
       }
     }
-    const LANGCHAIN_SERVER_URL = process.env.NEXT_PUBLIC_LANGCHAIN_SERVER_URL;
-    fetch(LANGCHAIN_SERVER_URL + `/langchains/conversate`, {
+
+    // Define custom body
+    // const formData = new FormData();
+    // formData.append("question", question);
+
+    // if (files != null) {
+    //   for (const file of files) {
+    //     formData.append("files", file);
+    //   }
+    // }
+
+    fetch(`/api/langchains/conversate`, {
       method: "POST",
       headers: headers,
-      body: formData,
+      body: JSON.stringify(json),
       cache: "no-store",
     })
       .then((res) => {

@@ -13,14 +13,18 @@ export async function POST(
 ) {
   const conversationId = req.headers.get("x-conversation-id") ?? null;
   // const headers: any = {'Content-Type': 'multipart/form-data'};
-  const headers: any = {};
+  const headers: any = {
+    'Content-Type': 'application/json', 
+    'Content-Length': req.headers.get('content-length')
+  };
   if (!!conversationId) {
     headers["X-Conversation-Id"] = conversationId;
   }
 
   return fetch(`${LANGCHAIN_SERVER_URL}/langchain/conversate`, {
-    method: "POST",
-    headers: headers,
-    body: await req.formData(),
+    'method': "POST",
+    'headers': headers,
+    'body': await req.text(),
+    'cache': "no-store"
   });
 }
