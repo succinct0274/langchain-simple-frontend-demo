@@ -168,7 +168,7 @@ const Chatbot = ({ conversationId, initialMessages: messages }: Props) => {
         toggleCloseButton={toggleCloseButton}
         style={{ position: "fixed", bottom: "5vh", right: "10vw", zIndex: 1 }}
       />
-      {!closed && (
+      {(
         <div
           key="chatbot-dialog"
           style={{
