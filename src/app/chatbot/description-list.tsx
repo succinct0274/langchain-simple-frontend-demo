@@ -1,8 +1,10 @@
 "use client";
 import { subscribe, unsubscribe } from "@/lib/event";
-import { useCallback, useEffect, useState } from "react";
+import { Mutable } from "next/dist/client/components/router-reducer/router-reducer-types";
+import { MutableRefObject, useCallback, useEffect, useRef, useState } from "react";
 
 type Props = {
+  promptRef: ReturnType<typeof useRef<HTMLDivElement>>;
   conversationId: string;
 };
 
@@ -12,7 +14,7 @@ type FileWithDescription = {
   content_type: string;
 };
 
-export default function DescriptionList({ conversationId }: Props) {
+export default function DescriptionList({ promptRef, conversationId }: Props) {
   const [filesWithDescription, setFilesWithDescription] = useState<
     FileWithDescription[]
   >([]);
@@ -169,6 +171,14 @@ export default function DescriptionList({ conversationId }: Props) {
                   </li>
                 ))}
               </ul>
+            </dd>
+          </div>
+          <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+          <dt className="text-sm font-medium leading-6 text-gray-900">
+              Custom Prompt
+            </dt>
+            <dd className="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0 p-3 border-2">
+              <div ref={promptRef as MutableRefObject<HTMLDivElement>} contentEditable></div>
             </dd>
           </div>
         </dl>

@@ -5,7 +5,9 @@ import React, { MutableRefObject, useEffect, useRef, useState } from "react";
 import ChatbotHeader from "./chatbot-header";
 import FloatingButton from "./floating-button";
 import { publish } from '../../lib/event';
+import { keyable } from "@/type/keyable";
 type Props = {
+  promptRef: ReturnType<typeof useRef<HTMLDivElement>>;
   initialMessages: MessageContent[];
   conversationId: string;
 };
@@ -17,7 +19,7 @@ type UploadedFileMetadata = {
   content_type: string;
 }
 
-const Chatbot = ({ conversationId, initialMessages: messages }: Props) => {
+const Chatbot = ({ promptRef, conversationId, initialMessages: messages }: Props) => {
   const [closed, setClosed] = useState(false);
   const deepChatRef: MutableRefObject<any> = useRef();
   let uploadedFiles: Set<UploadedFileMetadata> = new Set();
@@ -77,11 +79,15 @@ const Chatbot = ({ conversationId, initialMessages: messages }: Props) => {
     headers['Content-Type'] = 'application/json';
 
     // Construct request body
-    const json = {
+    const json: keyable = {
       'question': question,
       'metadata': {
         'attachment': [...uploadedFiles]
       }
+    }
+
+    if (promptRef && promptRef.current?.innerText) {
+      json['instruction'] = promptRef.current.innerText;
     }
 
     // Define custom body
